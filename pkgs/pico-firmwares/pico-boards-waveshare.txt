@@ -1,0 +1,13 @@
+# gh api repos/polhenarejos/pico-fido/releases/tags/v6.6 --jq '.assets[].name | ltrimstr("pico_fido_") | rtrimstr("-6.6.uf2")'
+waveshare_rp2040_ble
+waveshare_rp2040_eth
+waveshare_rp2040_matrix
+waveshare_rp2040_one
+waveshare_rp2040_plus_16mb
+waveshare_rp2040_plus_4mb
+waveshare_rp2040_tiny
+waveshare_rp2040_zero
+waveshare_rp2350_eth
+waveshare_rp2350_one
+waveshare_rp2350_tiny
+waveshare_rp2350_zero

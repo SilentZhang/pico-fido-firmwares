@@ -16,5 +16,5 @@ jobs:
           # contents: read & write
           # metadata: read only (automatically selected when selecting the contents permission)
           token: ${{ secrets.PAT }}
-          repository: librekeys/pico-fido-firmwares
+          repository: SilentZhang/pico-fido-firmwares
           event-type: update-flake-packages

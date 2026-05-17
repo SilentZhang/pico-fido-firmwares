@@ -25,7 +25,7 @@
 }:
 let
   picoBoards = lib.filter (s: s != "" && !(lib.hasPrefix "#" s)) (
-    lib.splitString "\n" (lib.trim (builtins.readFile ./pico-boards.txt))
+    lib.splitString "\n" (lib.trim (builtins.readFile ./pico-boards-waveshare.txt))
   );
   picoArgMatrix = lib.cartesianProduct {
     picoBoard = picoBoards;

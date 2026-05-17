@@ -1,5 +1,5 @@
 ---
-name: pico-fido-firmwares matrix build
+name: pico-fido-firmwares waveshare build
 
 on:
   push:

@@ -43,7 +43,7 @@ pico-lib.mkPicoDerivation rec {
     fetchSubmodules = true;
   };
 
-  repo = "librekeys/pico-openpgp";
+  repo = "SilentZhang/pico-openpgp";
   installName = "pico-openpgp";
   installPath = "pico_openpgp.uf2";
 

@@ -42,7 +42,7 @@ pico-lib.mkPicoDerivation rec {
     fetchSubmodules = true;
   };
 
-  repo = "librekeys/pico-fido";
+  repo = "SilentZhang/pico-fido";
   installName = "pico-fido";
   installPath = "pico_fido.uf2";
 
