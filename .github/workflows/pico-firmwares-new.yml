@@ -1,0 +1,84 @@
+---
+name: pico-fido-firmwares matrix build
+
+on:
+  push:
+    tags: [picofido-*, picofido2-*, picoopenpgp-*]
+  workflow_dispatch:
+    inputs:
+      releaseTag:
+        type: string
+        required: true
+        description: Tag used at release (e.g., picofido-7.4, picofido2-7.4, or
+          picoopenpgp-4.4)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    # 1. 使用标准 Ubuntu runner
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # 2. 安装 Nix 包管理器
+      # 使用 cachix/install-nix-action 是 GitHub Actions 中安装 Nix 的标准做法
+      - name: Install Nix
+        uses: cachix/install-nix-action@v30
+        with:
+          # 根据你的项目需求，可能需要启用 flakes 或指定 extra-experimental-features
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Determine firmware type and version
+        id: vars
+        run: |
+          if [ -n "${{ github.event.inputs.releaseTag }}" ]; then
+            TAG="${{ github.event.inputs.releaseTag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          if [[ "$TAG" == picofido-* ]]; then
+            echo "firmware=pico-fido" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" == picofido2-* ]]; then
+            echo "firmware=pico-fido2" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" == picoopenpgp-* ]]; then
+            echo "firmware=pico-openpgp" >> $GITHUB_OUTPUT
+          else
+            echo "::error::Invalid tag format. Use picofido-X.Y, picofido2-X.Y, or picoopenpgp-X.Y"
+            exit 1
+          fi
+          echo "version=${TAG##*-}" >> $GITHUB_OUTPUT
+
+      - name: Build firmware
+        # 现在可以直接使用 nix 命令，因为上一步已经安装了 Nix
+        run: nix build .#${{ steps.vars.outputs.firmware }}-firmwares
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          prerelease: true
+          generate_release_notes: true
+
+      - name: Upload files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          export DIR="result/share/${{ steps.vars.outputs.firmware }}"
+          # 注意：nix shell 在标准 runner 上也能正常工作，只要 Nix 已安装
+          # 如果担心 nix shell 的性能或复杂性，也可以直接用 gh 命令，前提是 gh 已安装
+          # Ubuntu runner 通常预装了 gh，如果没有，可以先安装 gh
+          nix shell nixpkgs#gh -c bash -c '
+            printf "%s\0" "$DIR"/* | xargs -0 -P 4 -I {} gh release upload "${{ steps.vars.outputs.tag }}" "{}" --clobber
+          '
