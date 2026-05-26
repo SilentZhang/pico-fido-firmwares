@@ -17,7 +17,7 @@ let
       hash = "sha256-6vTiOsTo8+r+GWhatAize3HC4TluboUQr9AOr1nx10o=";
     };
     eddsa = {
-      owner = "librekeys";
+      owner = "SilentZhang";
       repo = "mbedtls";
       rev = "mbedtls-3.6-eddsa";
       hash = "sha256-a2edwKskmOKMy34xsD29OW/TlfHCn5PtUKDliDGUXi8=";

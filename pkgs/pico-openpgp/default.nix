@@ -36,7 +36,7 @@ pico-lib.mkPicoDerivation rec {
   version = "4.4.2-librekeys";
 
   src = fetchFromGitHub {
-    owner = "librekeys";
+    owner = "SilentZhang";
     repo = "pico-openpgp";
     rev = "v${version}";
     hash = "sha256-hpY2Mwz4puK0VA6DkzLhgUAP6HaISTPqcwXBCrMkKlE=";

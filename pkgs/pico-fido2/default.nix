@@ -35,7 +35,7 @@ pico-lib.mkPicoDerivation rec {
   version = "7.4.2-librekeys";
 
   src = fetchFromGitHub {
-    owner = "librekeys";
+    owner = "SilentZhang";
     repo = "pico-fido2";
     rev = "v${version}";
     hash = "sha256-UA3ibvwaOaCfy7KTfOF7B1gxwE4k+dErNsTxU/FTaW4=";
